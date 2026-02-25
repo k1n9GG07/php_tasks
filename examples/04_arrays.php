@@ -187,6 +187,6 @@ echo "Значения: " . implode(", ", $значения) . "<br>";
     </style>
 </head>
 <body>
-    <p><a href="03_functions.php">← Назад к функциям</a> | <a href="../tasks/task_01.php">Перейти к заданиям →</a></p>
+    <p><a href="03_functions.php">← Назад к функциям</a> | <a href="05_forms.php">Далее: Формы →</a> | <a href="../tasks/task_01.php">Перейти к заданиям</a></p>
 </body>
 </html>

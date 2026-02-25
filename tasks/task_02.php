@@ -167,6 +167,6 @@ echo "</table>";
     </style>
 </head>
 <body>
-    <p><a href="task_01.php">← Предыдущее задание</a></p>
+    <p><a href="task_01.php">← Предыдущее задание</a> | <a href="task_03.php">Следующее задание →</a></p>
 </body>
 </html>

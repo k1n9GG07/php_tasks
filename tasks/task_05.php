@@ -103,6 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $показать_форму) {
         </div>
     <?php endif; ?>
 
-    <p style="margin-top: 20px;"><a href="task_04.php">← Предыдущее задание</a></p>
+    <p style="margin-top: 20px;"><a href="task_04.php">← Предыдущее задание</a> | <a href="task_06.php">Следующее задание →</a></p>
 </body>
 </html>

@@ -1,7 +1,0 @@
-{
-    "name": "kantemir/php-tasks",
-    "description": "Completed PHP tasks",
-    "require": {
-        "php": ">=7.4"
-    }
-}

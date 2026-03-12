@@ -16,18 +16,21 @@
 // Подсказка: используйте switch или if-else для проверки операции
 
 function calculate($a, $b, $operation) {
-    // Ваш код здесь
-    
-    // Пример структуры:
-    // switch ($operation) {
-    //     case '+':
-    //         return ...;
-    //     case '-':
-    //         return ...;
-    //     ...
-    //     default:
-    //         return "Неизвестная операция";
-    // }
+    switch ($operation) {
+        case '+':
+            return $a + $b;
+        case '-':
+            return $a - $b;
+        case '*':
+            return $a * $b;
+        case '/':
+            if ($b == 0) {
+                return 'Ошибка: деление на ноль';
+            }
+            return $a / $b;
+        default:
+            return 'Неизвестная операция';
+    }
 }
 
 // ============================================

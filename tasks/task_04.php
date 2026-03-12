@@ -13,22 +13,36 @@
  * 5. Добавить кнопку «Сбросить счётчик», которая сбрасывает $_SESSION['visits'] в 0
  */
 
-// TODO: запустите сессию в начале
+session_start();
 
 $сообщение = '';
 
 // Обработка действий
 if (isset($_GET['action'])) {
-    // TODO: если action === 'clear_cart', очистите $_SESSION['cart'] и перенаправьте сюда (header('Location: ...'); exit;)
-    // TODO: если action === 'reset_visits', сбросьте $_SESSION['visits'] в 0 и перенаправьте сюда
+    if ($_GET['action'] === 'clear_cart') {
+        $_SESSION['cart'] = [];
+        header('Location: task_04.php');
+        exit;
+    }
+    if ($_GET['action'] === 'reset_visits') {
+        $_SESSION['visits'] = 0;
+        header('Location: task_04.php');
+        exit;
+    }
 }
 
-// TODO: инициализируйте $_SESSION['visits'] если не задано, затем увеличьте на 1
-// TODO: инициализируйте $_SESSION['cart'] как пустой массив, если не задано
+if (!isset($_SESSION['visits'])) {
+    $_SESSION['visits'] = 0;
+}
+$_SESSION['visits']++;
+
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
 
 // Добавление товара в корзину из формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty(trim($_POST['product_name'] ?? ''))) {
-    // TODO: добавьте trim($_POST['product_name']) в массив $_SESSION['cart']
+    $_SESSION['cart'][] = trim($_POST['product_name']);
     $сообщение = 'Товар добавлен в корзину.';
 }
 ?>

@@ -24,29 +24,52 @@ $студенты = [
 // TODO 1: Создайте функцию getAverageScore
 // Функция должна вычислить средний балл всех студентов
 function getAverageScore($students) {
-    // Ваш код здесь
-    // Подсказка: используйте array_sum и count, или цикл foreach
+    if (empty($students)) {
+        return 0;
+    }
+    $sum = 0;
+    foreach ($students as $student) {
+        $sum += $student['балл'];
+    }
+    return $sum / count($students);
 }
 
 // TODO 2: Создайте функцию getBestStudent
 // Функция должна вернуть массив с данными студента с наивысшим баллом
 function getBestStudent($students) {
-    // Ваш код здесь
-    // Подсказка: используйте цикл foreach и переменную для хранения максимального балла
+    if (empty($students)) {
+        return null;
+    }
+    $best = $students[0];
+    foreach ($students as $student) {
+        if ($student['балл'] > $best['балл']) {
+            $best = $student;
+        }
+    }
+    return $best;
 }
 
 // TODO 3: Создайте функцию getStudentsByCourse
 // Функция должна вернуть массив студентов определенного курса
 function getStudentsByCourse($students, $course) {
-    // Ваш код здесь
-    // Подсказка: используйте array_filter или цикл foreach с условием
+    $result = [];
+    foreach ($students as $student) {
+        if ($student['курс'] == $course) {
+            $result[] = $student;
+        }
+    }
+    return $result;
 }
 
 // TODO 4: Создайте функцию addStudent
 // Функция должна добавить нового студента в массив (используйте & для передачи по ссылке)
 function addStudent(&$students, $name, $age, $course, $score) {
-    // Ваш код здесь
-    // Подсказка: добавьте новый элемент в массив $students
+    $students[] = [
+        "имя" => $name,
+        "возраст" => $age,
+        "курс" => $course,
+        "балл" => $score
+    ];
 }
 
 // ============================================

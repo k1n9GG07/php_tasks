@@ -24,9 +24,14 @@ $img = imagecreatetruecolor(300, 150);
 $bg = imagecolorallocate($img, 235, 235, 240);
 imagefill($img, 0, 0, $bg);
 
-// TODO: красный цвет и imagefilledrectangle($img, 20, 20, 120, 100, $red);
-// TODO: синий цвет и imagefilledellipse($img, 220, 75, 100, 60, $blue);
-// TODO: чёрный цвет и imagestring($img, 5, 130, 65, 'PHP', $black);
+$red = imagecolorallocate($img, 255, 0, 0);
+imagefilledrectangle($img, 20, 20, 120, 100, $red);
+
+$blue = imagecolorallocate($img, 0, 0, 255);
+imagefilledellipse($img, 220, 75, 100, 60, $blue);
+
+$black = imagecolorallocate($img, 0, 0, 0);
+imagestring($img, 5, 130, 65, 'PHP', $black);
 
 ob_end_clean();
 header('Content-Type: image/png');

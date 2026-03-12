@@ -20,28 +20,29 @@
  * Упрощение: логин/пароль можно захардкодить (admin / 12345). Капча — текстовая (код показываем на странице).
  */
 
-// TODO: session_start() в начале
+session_start();
 
 $ошибка = '';
 $показать_форму = true;
 
 // Выход
 if (isset($_GET['logout'])) {
-    // TODO: очистить сессию, session_destroy(), перенаправить на task_05.php
+    $_SESSION = [];
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+    header('Location: task_05.php');
+    exit;
 }
 
 // Если уже авторизован и не запрошен выход — показать «кабинет»
 if (!empty($_SESSION['user'])) {
     $показать_форму = false;
-}
-
-// Генерация капчи (при первой загрузке или по ?new_captcha=1)
-if (!isset($_SESSION['captcha_code']) || isset($_GET['new_captcha'])) {
-    $код = '';
-    for ($i = 0; $i < 5; $i++) {
-        $код .= (string)random_int(0, 9);
-    }
-    $_SESSION['captcha_code'] = $код;
 }
 
 // Обработка отправки формы входа
@@ -51,10 +52,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $показать_форму) {
     $ввод_капчи = trim($_POST['captcha_input'] ?? '');
     $ожидаемая_капча = $_SESSION['captcha_code'] ?? '';
 
-    // TODO: проверить капчу (сравнить $ввод_капчи и $ожидаемая_капча). После проверки удалить $_SESSION['captcha_code']
-    // TODO: если капча неверна — $ошибка = 'Неверный код с картинки'
-    // TODO: иначе проверить логин и пароль (admin / 12345). Если неверно — $ошибка = 'Неверный логин или пароль'
-    // TODO: если всё верно — записать в $_SESSION['user'] логин, сгенерировать новую капчу на будущее, перенаправить на task_05.php (header + exit)
+    if ($ввод_капчи !== $ожидаемая_капча) {
+        $ошибка = 'Неверный код капчи';
+    } elseif ($логин !== 'admin' || $пароль !== '12345') {
+        $ошибка = 'Неверный логин или пароль';
+    } else {
+        $_SESSION['user'] = 'admin';
+        unset($_SESSION['captcha_code']);
+        header('Location: task_05.php');
+        exit;
+    }
+    // В случае ошибки сбросим капчу, она перегенерируется ниже
+    unset($_SESSION['captcha_code']);
+}
+
+// Генерация капчи (при первой загрузке, по ?new_captcha=1 или после ошибки)
+if (!isset($_SESSION['captcha_code']) || isset($_GET['new_captcha'])) {
+    $код = '';
+    for ($i = 0; $i < 5; $i++) {
+        $код .= (string)random_int(0, 9);
+    }
+    $_SESSION['captcha_code'] = $код;
 }
 ?>
 <!DOCTYPE html>

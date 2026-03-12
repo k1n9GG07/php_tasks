@@ -29,7 +29,8 @@
 - Обработка форм (GET-запросы)
 
 ### Результат
-![Скриншот калькулятора](docs/screenshots/task_01.png)
+<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/e6bc45fa-8770-440b-9e6b-98ae17b2a4c0" />
+
 
 ---
 
@@ -49,7 +50,8 @@
 - Встроенные функции массивов (`array_column`, `count`)
 
 ### Результат
-![Скриншот работы с массивами](docs/screenshots/task_02.png)
+<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/3614652e-1342-4929-b42f-25f5d16e42fa" />
+
 
 ---
 
@@ -70,7 +72,8 @@
 - Безопасность (XSS protection)
 
 ### Результат
-![Скриншот формы обратной связи](docs/screenshots/task_03.png)
+<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/4034f0f6-945b-4984-a5d6-8103e44c7807" />
+
 
 ---
 
@@ -90,7 +93,8 @@
 - Массивы в сессиях
 
 ### Результат
-![Скриншот корзины и счетчика](docs/screenshots/task_04.png)
+<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/a911d2f3-d41c-4d8a-932a-5b381c1e20e3" />
+
 
 ---
 
@@ -110,7 +114,8 @@
 - Генерация случайных чисел (`random_int`)
 
 ### Результат
-![Скриншот окна авторизации](docs/screenshots/task_05.png)
+<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/9584b4b5-225e-44eb-9c3d-866caca00530" />
+
 
 ---
 

@@ -66,6 +66,20 @@ function generateImage(): void
         // Чёрный текст «PHP»
         imagestring($img, 5, 130, 65, 'PHP', $blackColor);
 
+        // Зелёный центральный квадрат (увеличен для видимости)
+        $greenColor = imagecolorallocate($img, 0, 128, 0);
+        $squareSize = 40; // Размер квадрата 40x40 вместо 1x1
+        $centerX = (int)($width / 2);
+        $centerY = (int)($height / 2);
+        imagefilledrectangle(
+            $img,
+            $centerX - (int)($squareSize / 2),
+            $centerY - (int)($squareSize / 2),
+            $centerX + (int)($squareSize / 2),
+            $centerY + (int)($squareSize / 2),
+            $greenColor
+        );
+
         // 4. Вывод результата
         ob_end_clean(); // Очищаем буфер перед отправкой изображения
         header('Content-Type: image/png');

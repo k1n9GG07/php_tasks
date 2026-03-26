@@ -74,7 +74,7 @@
 - Безопасность (XSS protection)
 
 ### Результат
-<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/4034f0f6-945b-4984-a5d6-8103e44c7807" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/d811db15-9735-4b31-9e50-89f044cb42b0" />
 
 
 ---

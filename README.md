@@ -51,8 +51,7 @@
 - Встроенные функции массивов (`array_column`, `count`)
 
 ### Результат
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/d811db15-9735-4b31-9e50-89f044cb42b0" />
-
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/a7e25c4d-5d8c-4390-9dc0-6591c8627102" />
 
 
 ---

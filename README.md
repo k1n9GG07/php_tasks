@@ -94,7 +94,8 @@
 - Массивы в сессиях
 
 ### Результат
-<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/a911d2f3-d41c-4d8a-932a-5b381c1e20e3" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2f9c5a24-bdaa-43d2-9826-fabf7911852c" />
+
 
 
 ---

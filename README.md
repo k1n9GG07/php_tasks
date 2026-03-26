@@ -29,7 +29,8 @@
 - Обработка форм (GET-запросы)
 
 ### Результат
-<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/e6bc45fa-8770-440b-9e6b-98ae17b2a4c0" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5f2114fc-f55d-4d06-b359-ecb8038b5e78" />
+
 
 
 ---

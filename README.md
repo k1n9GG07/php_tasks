@@ -116,7 +116,8 @@
 - Генерация случайных чисел (`random_int`)
 
 ### Результат
-<img width="700" height="700" alt="image" src="https://github.com/user-attachments/assets/9584b4b5-225e-44eb-9c3d-866caca00530" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/fd503d15-3617-4dea-9c9d-fead7f36aaed" />
+
 
 
 ---

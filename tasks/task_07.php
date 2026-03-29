@@ -1,39 +1,67 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * ЗАДАНИЕ 7 (часть 2): Форма с капчей-картинкой
- *
- * Форма с полем ввода и картинкой капчи (<img src="task_07_gen.php">).
- * Проверка введённого кода с $_SESSION['captcha_code']; после проверки — новый код в сессии.
- * Ссылка «Обновить капчу» (?new=1) задаёт новый код.
+ * ЗАДАНИЕ 7 (часть 2): Страница регистрации с капчей
+ * 
+ * Требования:
+ * 1. Форма с заголовком "Регистрация".
+ * 2. Динамическое изображение капчи.
+ * 3. Проверка ввода на стороне сервера через сессии.
+ * 4. Вывод ответов "Правильно" или "Неверный код".
+ * 
+ * @category Tasks
+ * @package  PHP_Tasks
+ * @author   Kantemir
+ * @license  MIT
+ * @date     2026-03-29
  */
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 $message = '';
-$success = false;
+$statusClass = '';
 
-if (isset($_GET['new']) && $_GET['new'] === '1') {
-    $_SESSION['captcha_code'] = (string) random_int(10000, 99999);
+// Функция генерации случайного кода для капчи (5-6 символов)
+function generateCaptchaCode(int $length = 5): string {
+    $chars = '23456789abcdefghjkmnpqrstuvwxyz'; // Исключены похожие символы (1, l, 0, o)
+    $code = '';
+    for ($i = 0; $i < $length; $i++) {
+        $code .= $chars[random_int(0, strlen($chars) - 1)];
+    }
+    return $code;
+}
+
+// Инициализация кода капчи при первом посещении
+if (!isset($_SESSION['captcha_code'])) {
+    $_SESSION['captcha_code'] = generateCaptchaCode(random_int(5, 6));
+}
+
+// Обработка отправки формы
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['captcha_input'])) {
+    $input = trim($_POST['captcha_input']);
+    $expected = $_SESSION['captcha_code'] ?? '';
+    
+    if ($input !== '' && $expected !== '' && strtolower($input) === strtolower($expected)) {
+        $message = 'Правильно';
+        $statusClass = 'success';
+    } else {
+        $message = 'Неверный код';
+        $statusClass = 'error';
+    }
+    
+    // Обновление кода после каждой попытки
+    $_SESSION['captcha_code'] = generateCaptchaCode(random_int(5, 6));
+}
+
+// Принудительное обновление через GET
+if (isset($_GET['refresh'])) {
+    $_SESSION['captcha_code'] = generateCaptchaCode(random_int(5, 6));
     header('Location: task_07.php');
     exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['captcha_input'])) {
-    $input = trim($_POST['captcha_input'] ?? '');
-    $expected = $_SESSION['captcha_code'] ?? '';
-    unset($_SESSION['captcha_code']);
-    if ($input !== '' && $expected !== '' && $input === $expected) {
-        $success = true;
-        $message = 'Верно!';
-    } else {
-        $message = 'Неверный код.';
-    }
-    $_SESSION['captcha_code'] = (string) random_int(10000, 99999);
-}
-
-if (!isset($_SESSION['captcha_code'])) {
-    $_SESSION['captcha_code'] = (string) random_int(10000, 99999);
 }
 ?>
 <!DOCTYPE html>
@@ -41,34 +69,42 @@ if (!isset($_SESSION['captcha_code'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Задание 7: Капча-картинка</title>
+    <title>Регистрация</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
-        .box { background: #fff; padding: 20px; border-radius: 8px; }
-        .msg { margin-top: 12px; padding: 10px; border-radius: 4px; }
-        .msg.ok { background: #e8f5e9; color: #2e7d32; }
-        .msg.err { background: #ffebee; color: #c62828; }
-        img { display: block; margin: 10px 0; border: 1px solid #ccc; }
-        input[type="text"] { padding: 8px; width: 120px; }
-        button { margin-top: 8px; padding: 8px 16px; background: #4CAF50; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        body { font-family: "Times New Roman", serif; background: #fff; margin: 50px; }
+        h1 { font-size: 48px; margin-bottom: 30px; }
+        .captcha-container { margin-bottom: 20px; }
+        .captcha-image { border: 1px solid #ccc; display: block; margin-bottom: 10px; }
+        .input-group { font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        input[type="text"] { font-size: 24px; padding: 5px; width: 150px; border: 1px solid #777; }
+        button { font-size: 20px; padding: 5px 15px; margin-top: 10px; cursor: pointer; }
+        .result-message { font-size: 32px; margin-top: 30px; }
+        .result-message.success { color: #000; } /* На скриншоте "Правильно" черного цвета */
+        .result-message.error { color: red; }
+        .refresh-link { font-size: 16px; color: blue; text-decoration: underline; cursor: pointer; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>Задание 7: Капча-картинка</h1>
-        <p>Введите код с картинки. Картинку генерирует <code>task_07_gen.php</code> (дополните в нём рисование линий и текста).</p>
+    <h1>Регистрация</h1>
 
-        <?php if ($message !== ''): ?>
-            <p class="msg <?= $success ? 'ok' : 'err' ?>"><?= htmlspecialchars($message) ?></p>
-        <?php endif; ?>
-
-        <form method="POST">
-            <img src="task_07_gen.php" alt="Капча" width="200" height="70"><br>
-            <a href="task_07.php?new=1">Обновить капчу</a><br><br>
-            <label>Код: <input type="text" name="captcha_input" autocomplete="off" maxlength="10" required></label><br>
-            <button type="submit">Проверить</button>
-        </form>
+    <div class="captcha-container">
+        <img src="task_07_gen.php?t=<?= time() ?>" alt="Капча" class="captcha-image">
+        <a href="task_07.php?refresh=1" class="refresh-link">Обновить картинку</a>
     </div>
-    <p style="margin-top: 20px;"><a href="task_06.php">← Задание 6</a> | <a href="task_05.php">Задание 5</a></p>
+
+    <form method="POST">
+        <div class="input-group">
+            <label for="captcha_input">Введите строку</label>
+            <input type="text" id="captcha_input" name="captcha_input" autocomplete="off" required>
+        </div>
+        <button type="submit">OK</button>
+    </form>
+
+    <?php if ($message !== ''): ?>
+        <div class="result-message <?= $statusClass ?>">
+            <?= htmlspecialchars($message) ?>
+        </div>
+    <?php endif; ?>
+
 </body>
 </html>

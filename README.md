@@ -158,6 +158,6 @@
 - Межстраничное взаимодействие через сессии
 - Динамическая генерация ресурсов
 
-### Результаты
-1.
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/3fe63324-5127-4612-bf2f-10a465184082" />
+2. Регистрация
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/e475706c-6cb6-444a-b315-6edf947c52a1" />
+

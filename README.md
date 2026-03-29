@@ -138,7 +138,8 @@
 - Управление буфером вывода (`ob_start`, `ob_clean`)
 
 ### Результат
-![Скриншот сгенерированного изображения](docs/screenshots/task_06.png)
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/e54f80e9-47e3-488d-8f62-89c9aaf63bbf" />
+
 
 ---
 

@@ -1,61 +1,107 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * ЗАДАНИЕ 7 (часть 1): Генератор изображения капчи
- *
- * Этот скрипт должен выводить PNG-картинку капчи (200×70):
- * — серый фон (imagecreatetruecolor + imagefill);
- * — 5–8 случайных линий (imageline) поверх фона;
- * — код капчи (5 цифр) из сессии — нарисовать через imagestring с разным размером (3, 4 или 5) и смещением по Y.
- *
- * В начале: ob_start(), session_start(). Код брать из $_SESSION['captcha_code'] (если пусто — сгенерировать и сохранить).
- * Перед выводом: ob_end_clean(), header('Content-Type: image/png'), imagepng($img).
- * Если GD не загружен — вывести заглушку (1×1 PNG) и exit.
+ * ЗАДАНИЕ 7 (часть 1): Продвинутая генерация капчи
+ * 
+ * Требования:
+ * 1. Символы разных цветов (один обязательно красный).
+ * 2. Символы разного размера (18-30 пт).
+ * 3. Расстояние между символами ~40 пт.
+ * 4. Графические шумы: точки и линии разного цвета и размера.
+ * 5. Использование TrueType шрифтов из C:\Windows\Fonts.
+ * 
+ * @category Tasks
+ * @package  PHP_Tasks
+ * @author   Kantemir
+ * @license  MIT
+ * @date     2026-03-29
  */
-ob_start();
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!extension_loaded('gd')) {
-    ob_end_clean();
+/**
+ * Генерирует изображение капчи с продвинутыми эффектами.
+ *
+ * @return void
+ */
+function generateCaptchaImage(): void
+{
+    if (!extension_loaded('gd')) {
+        header('Content-Type: image/png');
+        echo base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+        return;
+    }
+
+    $width = 300;
+    $height = 100;
+    $img = imagecreatetruecolor($width, $height);
+
+    if ($img === false) {
+        return;
+    }
+
+    // Цвета
+    $white = (int)imagecolorallocate($img, 255, 255, 255);
+    $red = (int)imagecolorallocate($img, 255, 0, 0);
+    
+    // Заливка фона
+    imagefill($img, 0, 0, $white);
+
+    // Получение кода
+    $code = $_SESSION['captcha_code'] ?? 'ERROR';
+    $length = strlen($code);
+
+    // Путь к шрифту
+    $fontPath = 'C:\\Windows\\Fonts\\arial.ttf';
+    if (!file_exists($fontPath)) {
+        $fontPath = 'C:\\Windows\\Fonts\\arial.ttf'; // Запасной вариант
+    }
+
+    // 1. Рисуем символы (разного размера, цвета, один красный)
+    $redIndex = random_int(0, $length - 1);
+    $startX = 20;
+
+    for ($i = 0; $i < $length; $i++) {
+        $size = random_int(18, 30);
+        $angle = random_int(-15, 15);
+        
+        if ($i === $redIndex) {
+            $color = $red;
+        } else {
+            $color = (int)imagecolorallocate($img, random_int(0, 150), random_int(0, 150), random_int(0, 150));
+        }
+
+        $y = random_int(45, 75);
+        
+        // Отрисовка символа
+        imagettftext($img, (float)$size, (float)$angle, $startX, $y, $color, $fontPath, $code[$i]);
+        
+        $startX += 40; // Расстояние между символами
+    }
+
+    // 2. Наложение шумов (линии разного цвета и толщины)
+    for ($i = 0; $i < 8; $i++) {
+        $lineColor = (int)imagecolorallocate($img, random_int(100, 220), random_int(100, 220), random_int(100, 220));
+        imagesetthickness($img, random_int(1, 2));
+        imageline($img, random_int(0, $width), random_int(0, $height), random_int(0, $width), random_int(0, $height), $lineColor);
+    }
+
+    // 3. Наложение шумов (точки разного цвета и размера)
+    for ($i = 0; $i < 1000; $i++) {
+        $dotColor = (int)imagecolorallocate($img, random_int(50, 255), random_int(50, 255), random_int(50, 255));
+        imagesetpixel($img, random_int(0, $width), random_int(0, $height), $dotColor);
+    }
+
+    // Вывод
     header('Content-Type: image/png');
-    header('Cache-Control: no-store');
-    echo base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
-    exit;
+    header('Cache-Control: no-store, no-cache, must-revalidate');
+    imagepng($img);
+    imagedestroy($img);
 }
 
-$code = $_SESSION['captcha_code'] ?? '';
-if ($code === '') {
-    $code = (string) random_int(10000, 99999);
-    $_SESSION['captcha_code'] = $code;
-}
-
-$w = 200;
-$h = 70;
-$img = imagecreatetruecolor($w, $h);
-$bg = imagecolorallocate($img, 232, 232, 238);
-imagefill($img, 0, 0, $bg);
-
-$lineColor1 = imagecolorallocate($img, 120, 120, 130);
-$lineColor2 = imagecolorallocate($img, 100, 100, 110);
-for ($i = 0; $i < 6; $i++) {
-    imageline($img, random_int(0, $w), random_int(0, $h), random_int(0, $w), random_int(0, $h), $i % 2 ? $lineColor1 : $lineColor2);
-}
-
-$textColor = imagecolorallocate($img, 40, 40, 50);
-$len = strlen($code);
-$sizes = [3, 4, 5];
-for ($i = 0; $i < $len; $i++) {
-    $char = $code[$i];
-    $size = $sizes[array_rand($sizes)];
-    $x = 15 + $i * 36;
-    $y = 18 + random_int(0, 18);
-    imagestring($img, $size, $x, $y, $char, $textColor);
-}
-
-ob_end_clean();
-header('Content-Type: image/png');
-header('Cache-Control: no-store, no-cache');
-imagepng($img);
-imagedestroy($img);
+// Запуск
+generateCaptchaImage();

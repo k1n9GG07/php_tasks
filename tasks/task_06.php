@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * ЗАДАНИЕ 6: Рисование изображения с помощью GD
  *
@@ -17,9 +19,8 @@
  * @package  PHP_Tasks
  * @author   Kantemir
  * @license  MIT
+ * @date     2026-03-29
  */
-
-declare(strict_types=1);
 
 // Начинаем буферизацию вывода, чтобы заголовки отправлялись корректно
 ob_start();
@@ -38,7 +39,7 @@ function generateImage(): void
     }
 
     try {
-        // 1. Создание холста
+        // 1. Создание холста (300x150)
         $width = 300;
         $height = 150;
         $img = imagecreatetruecolor($width, $height);
@@ -48,26 +49,30 @@ function generateImage(): void
         }
 
         // 2. Определение цветов
-        $bgColor = imagecolorallocate($img, 235, 235, 240);
-        $redColor = imagecolorallocate($img, 255, 0, 0);
-        $blueColor = imagecolorallocate($img, 0, 0, 255);
-        $blackColor = imagecolorallocate($img, 0, 0, 0);
+        // Светло-серый фон (235, 235, 240)
+        $bgColor = (int)imagecolorallocate($img, 235, 235, 240);
+        // Красный (255, 0, 0)
+        $redColor = (int)imagecolorallocate($img, 255, 0, 0);
+        // Синий (0, 0, 255)
+        $blueColor = (int)imagecolorallocate($img, 0, 0, 255);
+        // Чёрный (0, 0, 0)
+        $blackColor = (int)imagecolorallocate($img, 0, 0, 0);
 
         // 3. Рисование
-        // Фон
+        // Заливка фона
         imagefill($img, 0, 0, $bgColor);
 
-        // Красный залитый прямоугольник
+        // Красный залитый прямоугольник (20, 20) — (120, 100)
         imagefilledrectangle($img, 20, 20, 120, 100, $redColor);
 
-        // Синий залитый эллипс
+        // Синий залитый эллипс с центром (220, 75), шириной 100 и высотой 60
         imagefilledellipse($img, 220, 75, 100, 60, $blueColor);
 
-        // Чёрный текст «PHP»
+        // Чёрный текст «PHP» по координатам (130, 65)
         imagestring($img, 5, 130, 65, 'PHP', $blackColor);
 
         // Зелёный центральный квадрат (увеличен для видимости)
-        $greenColor = imagecolorallocate($img, 0, 128, 0);
+        $greenColor = (int)imagecolorallocate($img, 0, 128, 0);
         $squareSize = 40; // Размер квадрата 40x40 вместо 1x1
         $centerX = (int)($width / 2);
         $centerY = (int)($height / 2);
@@ -92,7 +97,9 @@ function generateImage(): void
         // 5. Освобождение памяти
         imagedestroy($img);
     } catch (Exception $e) {
-        ob_end_clean();
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
         header('HTTP/1.1 500 Internal Server Error');
         echo "Ошибка: " . $e->getMessage();
     }
@@ -100,13 +107,15 @@ function generateImage(): void
 
 /**
  * Обработка случая, когда расширение GD отсутствует.
- * Выводит 1x1 прозрачный пиксель или сообщение об ошибке.
+ * Выводит 1x1 прозрачный пиксель.
  *
  * @return void
  */
 function handleGdMissing(): void
 {
-    ob_end_clean();
+    if (ob_get_length()) {
+        ob_end_clean();
+    }
     header('Content-Type: image/png');
     header('Cache-Control: no-store');
     // 1x1 прозрачный PNG в base64
@@ -117,3 +126,4 @@ function handleGdMissing(): void
 // Запуск генерации
 generateImage();
 
+// Время завершения выполнения: 2026-03-29 12:00:00 (МСК)
